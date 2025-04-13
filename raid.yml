@@ -1,0 +1,32 @@
+
+---
+- name: RAID6 Setup with Partitioning and Mounting
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Install mdadm and parted #устанавливем пакеты
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - mdadm
+        - parted
+        
+    - name: DELETE RAID6 array /dev/md0 #удаляем ранее созданный рейд
+      command: >
+        sudo mdadm --stop /dev/md0 /dev/md127
+      ignore_errors: true
+
+    - name: Create RAID6 array /dev/md0 #создаем рейд
+      shell: |
+        yes | sudo mdadm --create --verbose /dev/md0 -l 6 -n 5 --force /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf  
+      args:
+        creates: /dev/md0
+
+    - name: Wait for /dev/md0 to be available #данная задержка требуется больше для рейдов с более объемными дисками
+      wait_for:
+        path: /dev/md0
+        timeout: 20
