@@ -1,5 +1,5 @@
 # otus_storage_systems
-“Файловые системы и LVM-1” курса Administrator Linux.Professional
+“Дисковая подсистема” курса Administrator Linux.Professional
 
 К работе добавлен файл для автоматического создания рейда с помощью Ansible.
 Далее описание работы без учета автоматической сборки рейда, для закрепления знаний. 
